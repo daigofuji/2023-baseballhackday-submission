@@ -6,11 +6,27 @@
 
 select {
   width: 100%;
-  font-size: 2em;
-  border: 1px solid #ccc;
+  font-size: 1.4rem;
+  font-size: clamp(1.4rem, 1.1199999999999999rem + 1.4vw, 2.8rem);  border: 1px solid #ccc;
   padding: .25em;
   line-height: 1.1;
 }
+
+.text {
+  font-size: 1rem;
+  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.5rem);
+}
+.text ul {
+  margin: 0;
+  padding-left: 1em;
+}
+
+.two-col {
+  columns: 200px 3;
+  gap: 20px;
+}
+
+
 
 .card {
   padding: 2em;

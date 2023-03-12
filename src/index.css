@@ -25,7 +25,8 @@ a:hover {
 
 
 h1 {
-  font-size: 3.2em;
+  font-size: 1.8rem;
+  font-size: clamp(1.8rem, 1.45rem + 1.7500000000000002vw, 3.2rem);
   line-height: 1.1;
 }
 

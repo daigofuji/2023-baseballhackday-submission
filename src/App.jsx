@@ -26,8 +26,9 @@ import suzukidata from "./assets/data/suzuki.json";
 import kawasakidata from "./assets/data/kawasaki.json";
 import aokidata from "./assets/data/aoki.json";
 import nishiokadata from "./assets/data/nishioka.json";
-
 import yoshidadata from "./assets/data/yoshida.json";
+
+import contract from "./assets/data/contract.json";
 
 // import reactLogo from './assets/react.svg'
 import './App.css'
@@ -41,18 +42,48 @@ ChartJS.register(
   Legend
 );
 
-
-
-
 function App() {
   const [datasource, setDatasource] = useState('ichiro')
 
   let data = [];
+
+  const afterTitle = (tooltipItems) => {
+    const ind = tooltipItems[0].dataIndex;
+    // console.log(data["Tm"][ind]);
+
+    return (`${data["Year"][ind]} ${data["Tm"][ind]}`);
+  };
+
+  const footer = (tooltipItems) => {
+    const ind = tooltipItems[0].dataIndex;
+    return (`OPS: ${data["OPS"][ind]}`);
+  };
+  const beforeBody = (tooltipItems) => {
+    const ind = tooltipItems[0].dataIndex;
+    return (`HR: ${data["HR"][ind]}`);
+  };
+
   const options = {
     plugins: {
       title: {
         display: true,
         text: 'OPS compared NPB/MLB',
+      },
+      tooltip: {
+        titleFont: {
+          size: 18
+        },
+        bodyFont: {
+          size: 16
+        },
+        footerFont: {
+          size: 16 // there is no footer by default
+        },
+        callbacks: {
+          footer: footer,
+          afterTitle: afterTitle,
+          beforeBody: beforeBody,
+        }
       },
     },
     responsive: true,
@@ -62,8 +93,10 @@ function App() {
       },
       y: {
         stacked: true,
+        max: 1.2
       },
     },
+
   };
 
   const labels = ['Age 18', 'Age 19', 'Age 20', 'Age 21', 'Age 22', 'Age 23', 'Age 24', 'Age 25', 'Age 26', 'Age 27', 'Age 28', 'Age 29', 'Age 30', 'Age 31', 'Age 32', 'Age 33', 'Age 34', 'Age 35', 'Age 36', 'Age 37', 'Age 38', 'Age 39', 'Age 40', 'Age 41', 'Age 42', 'Age 43', 'Age 44', 'Age 45'];
@@ -124,8 +157,22 @@ function App() {
       data = ichirodata;
   };
 
-  console.log(datasource, data);
+  const ContractText = ({ id }) => (
+    <div className="text two-col">
+      <ul>
+        {/* <li>Age: {contract[id]["Age"]}</li> */}
+        <li>Year: {contract[id]["Year"]}</li>
+        <li>First year contract: {contract[id]["First year contract"]}</li>
+        <li>MLB Team: {contract[id]["MLB Team"]}</li>
+        <li>NPB Team: {contract[id]["NPB Team"]}</li>
+        <li>Position: {contract[id]["Pos"]}</li>
+        <li>Method: {contract[id]["method"]}</li>
+        <li><a href={contract[id]["url"]}>Source Baseball-Reference</a></li>
+      </ul>
+    </div>
+  );
 
+  
   const chartdata = {
     labels,
     datasets: [
@@ -176,7 +223,13 @@ function App() {
         <option value='yoshida'>Masataka Yoshida (2023)</option>
       </select>
 
+      <ContractText id={datasource} />
+
       <Bar options={options} data={chartdata} />
+
+      <footer>
+        <div>Note: Age is as of June 1 of that year. Project by @DaigoFuji, for <a href="https://baseball-hack-day-2023.devpost.com/project-gallery">2023 Baseball Hack Day</a> March 11, 2023. Data from <a href="https://www.baseball-reference.com/bio/Japan_born.shtml">Baseball-Reference.com</a> and <a href="https://japaneseballplayers.com/">JapaneseBallPlayers.com</a>. Build using <a href="https://vitejs.dev/guide/">Vite + React</a>, <a href="https://react-chartjs-2.js.org/">Chart.js + react-chartjs-2</a>, <a href="https://pages.github.com/">GitHub pages</a>. Source code <a href="https://github.com/daigofuji/2023-baseballhackday-submission">here (GitHub)</a></div>
+      </footer>
     </div>
   )
 }
